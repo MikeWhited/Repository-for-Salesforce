@@ -9,6 +9,25 @@
   </apex:commandButton>
  </apex:pageBlockSection>
     <apex:pageBlockSection columns="2">
+        <apex:pageblockTable value="{!result2}" var="act">
+         <apex:column value="{!act.name}"/>
+          <apex:column value="{!act.owner.name}"/>
+          <apex:column value="{!act.Closed_Won_Opptys__c}"/>
+          <apex:column value="{!act.Site}"/>
+          <apex:column value="{!act.id}"/>
+        </apex:pageblockTable>
+         <br/>
+         <apex:pageblockTable value="{!result3}" var="cont">
+            <apex:column value="{!cont.name}"/>
+             <apex:column value="{!cont.account.name}"/>
+             <apex:column value="{!cont.id}"/>
+             <apex:column value="{!cont.Price_Per_GB__c}"/>
+             <apex:column value="{!cont.SubscriptionPricePerMonth__c}"/>
+             <apex:column value="{!cont.StartDate}"/>
+             <apex:column value="{!cont.EndDate}"/>
+    </apex:pageblockTable>   
+ </apex:pageBlockSection>
+    <apex:pageBlockSection columns="2">
         <apex:pageblockTable value="{!result}" var="wl">
          <apex:column value="{!wl.name}"/>
           <apex:column value="{!wl.account.name}"/>
