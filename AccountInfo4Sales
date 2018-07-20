@@ -43,6 +43,16 @@
              <apex:column value="{!opp.account.name}"/>
              <apex:column value="{!opp.id}"/>
     </apex:pageblockTable>   
+ 	</apex:pageBlockSection>
+    	<br/>
+    <apex:pageBlockSection title="Matters" columns="1">
+         <apex:pageblockTable value="{!result4}" var="matt">
+            <apex:column value="{!matt.name}"/>
+             <apex:column value="{!matt.Active__c}"/>
+             <apex:column value="{!matt.Salesperson__c}"/>
+             <apex:column value="{!matt.Total_Active_GB__c}"/>
+             <apex:column value="{!matt.Per_GB_Price_per_Month__c}"/>
+    </apex:pageblockTable>   
  </apex:pageBlockSection>
 </apex:pageBlock>
 </apex:form>
