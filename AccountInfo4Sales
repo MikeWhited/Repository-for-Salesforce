@@ -8,7 +8,7 @@
 
   </apex:commandButton>
  </apex:pageBlockSection>
-    <apex:pageBlockSection columns="2">
+    <apex:pageBlockSection title="Accounts" columns="1">
         <apex:pageblockTable value="{!result2}" var="act">
          <apex:column value="{!act.name}"/>
           <apex:column value="{!act.owner.name}"/>
@@ -16,7 +16,9 @@
           <apex:column value="{!act.Site}"/>
           <apex:column value="{!act.id}"/>
         </apex:pageblockTable>
+    </apex:pageBlockSection>
          <br/>
+    <apex:pageBlockSection title="Contracts" columns="1">
          <apex:pageblockTable value="{!result3}" var="cont">
             <apex:column value="{!cont.name}"/>
              <apex:column value="{!cont.account.name}"/>
@@ -27,13 +29,15 @@
              <apex:column value="{!cont.EndDate}"/>
     </apex:pageblockTable>   
  </apex:pageBlockSection>
-    <apex:pageBlockSection columns="2">
+    <apex:pageBlockSection title="Contacts" columns="1">
         <apex:pageblockTable value="{!result}" var="wl">
          <apex:column value="{!wl.name}"/>
           <apex:column value="{!wl.account.name}"/>
           <apex:column value="{!wl.id}"/>
         </apex:pageblockTable>
+    </apex:pageBlockSection>
          <br/>
+    <apex:pageBlockSection title="Opportunities" columns="1">
          <apex:pageblockTable value="{!result1}" var="opp">
             <apex:column value="{!opp.name}"/>
              <apex:column value="{!opp.account.name}"/>
