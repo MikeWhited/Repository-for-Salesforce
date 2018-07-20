@@ -4,6 +4,7 @@ public class demoClass {
      public list<opportunity> result1 {get; set;}
      public list<account> result2 {get; set;}
      public list<contract> result3 {get; set;}
+     public list<matter__c> result4 {get; set;}
      public democlass()
      {
       result = new list<Contact>();
@@ -17,8 +18,10 @@ public class demoClass {
       result2 = new list<Account>();
       result2=new List<Account>();
       result2=[select ID,Name, Owner.name,Closed_Won_Opptys__c, Site from Account where Name like:'%'+searchboxstring+'%'];
-      result3 = new list<Contract>();
+	  result3 = new list<Contract>();
       result3=new List<Contract>();
       result3=[select ID,Name, account.name,Price_Per_GB__c,SpecialTerms,SubscriptionPricePerMonth__c, EndDate, StartDate, Owner.name from Contract where account.Name like:'%'+searchboxstring+'%'];
+      result4 = new list<Matter__c>();
+      result4=[select ID,Name,Active__c,Salesperson__c,Total_Active_GB__c,Per_GB_Price_per_Month__c  from Matter__c where Contract_Billing_Account__c like:'%'+searchboxstring+'%'];   
      }
 }
