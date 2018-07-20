@@ -2,7 +2,8 @@ public class demoClass {
 	public string searchboxstring{get; set;}
      public list<contact> result {get; set;}
      public list<opportunity> result1 {get; set;}
-    
+     public list<account> result2 {get; set;}
+     public list<contract> result3 {get; set;}
      public democlass()
      {
       result = new list<Contact>();
@@ -13,5 +14,11 @@ public class demoClass {
       result1 = new list<Opportunity>();
       result1=new List<Opportunity>();
       result1=[select ID,Name, account.name from Opportunity where account.Name like:'%'+searchboxstring+'%'];
+      result2 = new list<Account>();
+      result2=new List<Account>();
+      result2=[select ID,Name, Owner.name,Closed_Won_Opptys__c, Site from Account where Name like:'%'+searchboxstring+'%'];
+      result3 = new list<Contract>();
+      result3=new List<Contract>();
+      result3=[select ID,Name, account.name,Price_Per_GB__c,SpecialTerms,SubscriptionPricePerMonth__c, EndDate, StartDate, Owner.name from Contract where account.Name like:'%'+searchboxstring+'%'];
      }
 }
