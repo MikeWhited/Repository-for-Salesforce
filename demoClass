@@ -1,0 +1,17 @@
+public class demoClass {
+	public string searchboxstring{get; set;}
+     public list<contact> result {get; set;}
+     public list<opportunity> result1 {get; set;}
+    
+     public democlass()
+     {
+      result = new list<Contact>();
+     }
+     public void searchbox(){
+      result=new List<Contact>();
+      result=[select ID,Name,phone, account.name from Contact where account.Name like:'%'+searchboxstring+'%'];
+      result1 = new list<Opportunity>();
+      result1=new List<Opportunity>();
+      result1=[select ID,Name, account.name from Opportunity where account.Name like:'%'+searchboxstring+'%'];
+     }
+}
