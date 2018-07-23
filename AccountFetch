@@ -1,14 +1,31 @@
-<apex:page controller="demoClass" contentType="application/vnd.ms-excel#AccountFetch.csv" cache="true">
-    <apex:pageBlock title="AccountFetch">
-    
-    <apex:pageblockTable value="{!result2}" var="act">
-         <apex:column value="{!act.name}"/>
-          <apex:column value="{!act.owner.name}"/>
-          <apex:column value="{!act.Closed_Won_Opptys__c}"/>
-          <apex:column value="{!act.Site}"/>
-          <apex:column value="{!act.id}"/>
-        </apex:pageblockTable>
-    
-    </apex:pageBlock>
-    
+<apex:page controller="demoClass" contentType="application/vnd.ms-excel#AccountFetch.xls" cache="true">
+    <table>
+  <tr>
+    <th>Account Name</th>
+    <th>Account Owner</th>
+    <th>Closed Wins</th>
+    <th>Account Site</th>
+    <th>Account ID</th>
+  </tr>
+
+  <apex:repeat value="{!result2}" var="act">
+    <tr>
+      <td>
+        <span>{!act.name}</span>
+      </td>
+      <td>
+        <span>{!act.owner.name}</span>
+      </td>
+      <td>
+        <span>{!act.Closed_Won_Opptys__c}</span>
+      </td>
+      <td>
+        <span>{!act.Site}</span>
+      </td>
+      <td>
+        <span>{!act.id}</span>
+      </td>
+    </tr>
+  </apex:repeat>
+</table>
 </apex:page>
