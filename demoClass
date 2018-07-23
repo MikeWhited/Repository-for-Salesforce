@@ -19,6 +19,7 @@ public class demoClass {
       result3=new List<Contract>();
       result3=[select ID,Name, account.name,Price_Per_GB__c,SpecialTerms,SubscriptionPricePerMonth__c, EndDate, StartDate, Owner.name from Contract where account.Name like:'%'+searchboxstring+'%'];
       result4 = new list<Matter__c>();
-      result4=[select ID,Name,Active__c,Salesperson__c,Total_Active_GB__c,Per_GB_Price_per_Month__c  from Matter__c where Contract_Billing_Account__c like:'%'+searchboxstring+'%'];   
+      result4=[select ID,Name,Active__c,Salesperson__c,Total_Active_GB__c,Per_GB_Price_per_Month__c  from Matter__c where Contract_Billing_Account__c like:'%'+searchboxstring+'%' or Contract_EndUser_Account__c like:'%'+searchboxstring+'%'];   
      }
+
 }
