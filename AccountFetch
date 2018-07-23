@@ -1,0 +1,14 @@
+<apex:page controller="demoClass" contentType="application/vnd.ms-excel#AccountFetch.csv" cache="true">
+    <apex:pageBlock title="AccountFetch">
+    
+    <apex:pageblockTable value="{!result2}" var="act">
+         <apex:column value="{!act.name}"/>
+          <apex:column value="{!act.owner.name}"/>
+          <apex:column value="{!act.Closed_Won_Opptys__c}"/>
+          <apex:column value="{!act.Site}"/>
+          <apex:column value="{!act.id}"/>
+        </apex:pageblockTable>
+    
+    </apex:pageBlock>
+    
+</apex:page>
