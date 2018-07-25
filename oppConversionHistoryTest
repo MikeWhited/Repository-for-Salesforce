@@ -1,0 +1,20 @@
+@isTest
+private class OpptyConversionHistorySupplementerTest {
+  
+  @isTest static void TestIt() {
+    Opportunity newOpportunity = new Opportunity();
+    newOpportunity.Name = 'Golden';
+    newOpportunity.StageName = 'SQL';
+    newOpportunity.CloseDate = Date.today();
+    newOpportunity.Type = 'New Business';
+    newOpportunity.Strategic_Initiative__c = 'Mike Growth Accounts;';
+    newOpportunity.RecordTypeId = '012o0000000OC7AAAW';
+    newOpportunity.Primary_Contact__c = '003o000000eMrvX';
+    insert newOpportunity;
+
+    Test.StartTest();
+    OpportunityConversionHistorySupplementer opportunityConversionHistorySupplementer = new OpportunityConversionHistorySupplementer();
+    Database.executeBatch(opportunityConversionHistorySupplementer);
+    Test.StopTest();
+  }  
+}
