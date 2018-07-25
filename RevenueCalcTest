@@ -1,0 +1,7 @@
+@isTest
+private class RevenueCalculatorTests {
+  
+  @isTest(seeAllData=true) static void testCalculateMRR() {
+    RevenueCalculator.calculateMRR(RevenueCalculator.getContractsWithMatters(1));
+  }
+}
