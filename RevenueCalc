@@ -1,0 +1,334 @@
+## GABE
+
+public class RevenueCalculator implements Database.Batchable<ContractWithMatters>, Schedulable {
+
+    public static Date dateToCalculateOn = date.today();
+
+    public static void deleteAll() {
+        List<Daily_MRR_Calculation__c> items = [SELECT Id from Daily_MRR_Calculation__c];
+        delete items;
+        List<Monthly_MRR_Item__c> otherItems = [SELECT Id from Monthly_MRR_Item__c];
+        delete otherItems;
+    }
+
+    public static void execute(SchedulableContext sc) {
+        Database.executeBatch(new RevenueCalculator(), 1);
+    }
+
+    public Iterable<ContractWithMatters> start(Database.BatchableContext BC) {
+        return getContractsWithMatters(2000000000);
+    }
+
+    public void execute(Database.BatchableContext info, List<ContractWithMatters> contractsWithMatters) {
+        calculateMRR(contractsWithMatters);
+    }
+
+    public void finish(Database.BatchableContext info) {
+        Database.executeBatch(new RevenueCalculatorUpdateAccounts());
+    }
+
+    public static void calculateMRR(List<ContractWithMatters> contractsWithMatters) {
+        //Map<Id, Daily_MRR_Calculation__c> matterMRRMap = new Map<Id, Daily_MRR_Calculation__c>();
+        //Map<Id, Daily_MRR_Calculation__c> contractMRRMap = new Map<Id, Daily_MRR_Calculation__c>();
+        Map<Id, Decimal> matterMRRMap = new Map<Id, Decimal>();
+        //Map<Id, MRRTuple> contractMRRMap = new Map<Id, MRRTuple>();
+        //List<Monthly_MRR_Item__c> monthlyMRRItemsToAdd = new List<Monthly_MRR_Item__c>();
+        Set<SObject> contractsToUpdate = new Set<SObject>();
+        Set<SObject> mattersToUpdate = new Set<SObject>();
+
+        for (ContractWithMatters contractWithMatters : contractsWithMatters) {
+            String contractType = contractWithMatters.Contract.Type__c;
+            Contract contract = contractWithMatters.Contract;
+            contractsToUpdate.add(contract);
+
+            Decimal contractCurrentMRR = 0;
+            Decimal contractAllTimeMRR = 0;
+
+            if (contractType == 'Subscription') {
+                for (Date currentMonth : monthsUntilNow()) {
+                    List<Matter__c> mattersThisMonth = contractWithMatters.MRRMonths.get(currentMonth);
+                    //Daily_MRR_Calculation__c dailyMRRCalculation = contractMRRMap.get(contract.Id);
+                    //if (dailyMRRCalculation == null) {
+                    //    dailyMRRCalculation = new Daily_MRR_Calculation__c();
+                    //    dailyMRRCalculation.Name = date.today().format();
+                    //    dailyMRRCalculation.Date_of_Calculation__c = date.today();
+                    //    dailyMRRCalculation.Contract__c = contract.Id;
+                    //    dailyMRRCalculation.External_ID__c = createGUID();
+                    //    contractMRRMap.put(contract.Id, dailyMRRCalculation);
+                    //}
+
+                    //String externalId = dailyMRRCalculation.External_ID__c;
+
+                    //Monthly_MRR_Item__c monthlyMRRItem = new Monthly_MRR_Item__c();
+                    //monthlyMRRItem.Name = currentMonth.format();
+                    //monthlyMRRItem.First_Day_of_Month__c = currentMonth;
+                    //monthlyMRRItem.MRR__c = calculateSubscriptionMRR(contract, mattersThisMonth, currentMonth);
+                    //contract.Current_Month_MRR__c = monthlyMRRItem.MRR__c;
+                    //Daily_MRR_Calculation__c temp = new Daily_MRR_Calculation__c();
+                    //temp.External_ID__c = externalId;
+                    //monthlyMRRItem.Daily_MRR_Calculation__r = temp;
+                    //monthlyMRRItemsToAdd.add(monthlyMRRItem);
+
+                    Decimal thisMonthSubMRR = calculateSubscriptionMRR(contract, mattersThisMonth, currentMonth);
+
+                    contractAllTimeMRR += thisMonthSubMRR;
+                    if (currentMonth.month() == date.today().month() && currentMonth.year() == date.today().year()) {
+                        contractCurrentMRR = thisMonthSubMRR;
+                    }
+                }
+
+
+
+
+            } else if (contractType == 'Transactional') {
+                for (Date currentMonth : monthsUntilNow()) {
+                    List<Matter__c> mattersThisMonth = contractWithMatters.MRRMonths.get(currentMonth);
+                    for (Matter__c matter : mattersThisMonth) {
+
+                        //Daily_MRR_Calculation__c dailyMRRCalculation = matterMRRMap.get(matter.Id);
+                        //if (dailyMRRCalculation == null) {
+                        //    dailyMRRCalculation = new Daily_MRR_Calculation__c();
+                        //    dailyMRRCalculation.Name = date.today().format();
+                        //    dailyMRRCalculation.Date_of_Calculation__c = date.today();
+                        //    dailyMRRCalculation.Matter__c = matter.Id;
+                        //    dailyMRRCalculation.External_ID__c = createGUID();
+                        //    matterMRRMap.put(matter.Id, dailyMRRCalculation);
+                        //}
+
+                        //String externalId = dailyMRRCalculation.External_ID__c;
+
+                        //Monthly_MRR_Item__c monthlyMRRItem = new Monthly_MRR_Item__c();
+                        //monthlyMRRItem.Name = currentMonth.format();
+                        //monthlyMRRItem.First_Day_of_Month__c = currentMonth;
+                        //monthlyMRRItem.MRR__c = calculateTransactionalMRR(matter, currentMonth, contract);
+                        //matter.Current_Month_MRR__c = monthlyMRRItem.MRR__c;
+                        //Daily_MRR_Calculation__c temp = new Daily_MRR_Calculation__c();
+                        //temp.External_ID__c = externalId;
+                        //monthlyMRRItem.Daily_MRR_Calculation__r = temp;
+                        //monthlyMRRItemsToAdd.add(monthlyMRRItem);
+
+                        Decimal thisMonthMRR = calculateTransactionalMRR(matter, currentMonth, contract);
+
+                        if (!matterMRRMap.containsKey(matter.Id)) {
+                            matterMRRMap.put(matter.Id, 0);
+                        }
+
+                        Decimal runningAllTimeMRR = matterMRRMap.get(matter.Id) + thisMonthMRR;
+                        matterMRRMap.put(matter.Id, runningAllTimeMRR);
+
+                        matter.All_Time_MRR__c = runningAllTimeMRR;
+                        contractAllTimeMRR += thisMonthMRR;
+
+                        if (currentMonth.month() == date.today().month() && currentMonth.year() == date.today().year()) {
+                            contractCurrentMRR += thisMonthMRR;
+                            matter.Current_Month_MRR__c = thisMonthMRR;
+                            mattersToUpdate.add(matter);
+                        }
+                    }
+                }
+            }
+
+            contract.All_Time_MRR__c = contractAllTimeMRR;
+            contract.Current_Month_MRR__c = contractCurrentMRR;
+        }
+
+        update new List<SObject>(contractsToUpdate);
+        update new List<SObject>(mattersToUpdate);
+
+        //List<SObject> listToReturn = new List<SObject>();
+        //listToReturn.addAll((List<SObject>) matterMRRMap.values());
+        //listToReturn.addAll((List<SObject>) contractMRRMap.values());
+        //listToReturn.addAll((List<SObject>) monthlyMRRItemsToAdd);
+
+        //insert matterMRRMap.values();
+        //insert contractMRRMap.values();
+        //insert monthlyMRRItemsToAdd;
+    }
+
+    public static List<ContractWithMatters> getContractsWithMatters(Integer matterLimit) {
+        List<Contract> allContracts = [Select Id,
+                                       StartDate,
+                                       EndDate,
+                                       SubscriptionPricePerMonth__c,
+                                       SubscriptionPerGbOveragePrice__c,
+                                       SubscriptionDataLimit__c,
+                                       Type__c,
+                                       Price_per_GB_Cold_Storage__c,
+                                       Price_Per_GB__c,
+                                       MinimumMatterCharge__c,
+                                       MaximumMatterCharge__c From Contract ];
+        Map<Id, ContractWithMatters> contractMap = getContractMap(allContracts);
+
+        List<Matter__c> allMatters = [  SELECT
+                                        Id,
+                                        DeactivationDate__c,
+                                        Contract__r.Id,
+                                        (SELECT Data_Size__c, DateAdded__c FROM Datasets__r),
+                                        (Select Start_Date__c, Contract__c, End_Date__c From Contract_Spans__r),
+                                        (Select Begin_Date__c, End_Date__c From Cold_Storage_Date_Ranges__r)
+                                        FROM Matter__c
+                                        LIMIT :matterLimit];
+
+        for (Date firstDayOfThisMonth : monthsUntilNow()) {
+
+            for (Matter__c currentTransactionalMatter : allMatters) {
+
+                Id currentContractId
+                    = getMatterContractIdAtEndOfMonth(currentTransactionalMatter.Contract__r.Id, currentTransactionalMatter.Contract_Spans__r, firstDayOfThisMonth);
+                ContractWithMatters contractWithMatters = contractMap.get(currentContractId);
+                contractWithMatters.MRRMonths.get(firstDayOfThisMonth).add(currentTransactionalMatter);
+            }
+        }
+
+        return contractMap.values();
+    }
+
+    public static Map<Id, ContractWithMatters> getContractMap(List<Contract> allContracts) {
+        Map<Id, ContractWithMatters> mapToReturn = new Map<Id, ContractWithMatters>();
+
+        for (Contract contract : allContracts) {
+            ContractWithMatters contractWithMatters = new ContractWithMatters();
+            contractWithMatters.Contract = contract;
+            contractWithMatters.MRRMonths = new Map<Date, List<Matter__c>>();
+
+            for (Date firstDayOfThisMonth : monthsUntilNow()) {
+                contractWithMatters.MRRMonths.put(firstDayOfThisMonth, new List<Matter__c>());
+            }
+
+            mapToReturn.put(contract.Id, contractWithMatters);
+        }
+
+        return mapToReturn;
+    }
+
+    public static Id getMatterContractIdAtEndOfMonth(Id contractId, List<ContractSpan__c> contractSpans, Date theDate) {
+        Date beginningOfNextMonth = beginningOfNextMonth(theDate);
+
+        for (ContractSpan__c contractSpan : contractSpans) {
+            if (    contractSpan.Start_Date__c != null &&
+                    contractSpan.Start_Date__c < beginningOfNextMonth &&
+                    (contractSpan.End_Date__c == null || contractSpan.End_Date__c >= beginningOfNextMonth)) {
+                return contractSpan.Contract__c;
+                break;
+            }
+        }
+
+        return contractId;
+    }
+
+    class ContractWithMatters {
+        public Contract Contract { get; set; }
+        public Map<Date, List<Matter__c>> MRRMonths { get; set; }
+    }
+
+    private static List<Date> monthsUntilNow() {
+        List<Date> listOfDatesToReturn = new List<Date>();
+
+        for (Date indexDate = Date.newInstance(2012, 12, 1); indexDate <= date.today(); indexDate = indexDate.addMonths(1)) {
+            listOfDatesToReturn.add(indexDate);
+        }
+
+        return listOfDatesToReturn;
+    }
+
+    private static Decimal calculateTransactionalMRR(Matter__c matter,
+            Date dateOfCalculation,
+            Contract contract) {
+
+        Decimal mrr = 0;
+        if (matter.Datasets__r.size() > 0 && matterIsActiveAtEndOfThisMonth(matter, dateOfCalculation)) {
+            Date beginningOfNextMonth = beginningOfNextMonth(dateOfCalculation);
+
+            Decimal pricePerGB;
+            if (inColdStorageLastDayOfMonth(matter, dateOfCalculation) && contract.Price_per_GB_Cold_Storage__c != null) {
+                pricePerGB = contract.Price_per_GB_Cold_Storage__c;
+            } else {
+                pricePerGB = contract.Price_Per_GB__c;
+            }
+
+            for (Dataset__c dataset : matter.Datasets__r) {
+                if (dataset.DateAdded__c < beginningOfNextMonth) {
+                    mrr += dataset.Data_Size__c * pricePerGB;
+                }
+            }
+
+            if (mrr < contract.MinimumMatterCharge__c) {
+                mrr = contract.MinimumMatterCharge__c;
+            }
+
+            if (contract.MaximumMatterCharge__c > 0 && mrr > contract.MaximumMatterCharge__c) {
+                mrr = contract.MaximumMatterCharge__c;
+            }
+        }
+
+        return mrr;
+    }
+
+    private static Decimal calculateSubscriptionMRR(Contract contract, List<Matter__c> matters, Date theDate) {
+        Date beginningOfNextMonth = beginningOfNextMonth(theDate);
+        Decimal mrr = 0;
+
+        if (contract.StartDate < beginningOfNextMonth && contract.EndDate >= beginningOfNextMonth.addDays(-1)) {
+            mrr += contract.SubscriptionPricePerMonth__c;
+        }
+
+        if (contract.SubscriptionPerGbOveragePrice__c > 0) {
+            Decimal totalActiveDataAtEndOfMonth = 0;
+
+            for (Matter__c matter : matters) {
+                if (matterIsActiveAtEndOfThisMonth(matter, theDate)) {
+                    for (Dataset__c dataset : matter.Datasets__r) {
+                        if (dataset.DateAdded__c < beginningOfNextMonth(theDate)) {
+                            totalActiveDataAtEndOfMonth += dataset.Data_Size__c;
+                        }
+                    }
+                }
+            }
+
+            Decimal overageGB = totalActiveDataAtEndOfMonth - contract.SubscriptionDataLimit__c;
+            if (overageGB > 0) {
+                mrr += (overageGB * contract.SubscriptionPerGbOveragePrice__c);
+            }
+        }
+        return mrr;
+    }
+
+    private static Boolean matterIsActiveAtEndOfThisMonth(Matter__c matter, Date dateOfCalculation) {
+        Date beginningOfNextMonth = beginningOfNextMonth(dateOfCalculation);
+        return (matter.DeactivationDate__c == null || matter.DeactivationDate__c >= beginningOfNextMonth)
+               && matterHasDatasetsBeforeThisDate(matter, beginningOfNextMonth);
+    }
+
+    private static Boolean matterHasDatasetsBeforeThisDate(Matter__c matter, Date dateOfCalculation) {
+        for (Dataset__c dataset : matter.Datasets__r) {
+            if (dataset.DateAdded__c < dateOfCalculation) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static Date beginningOfNextMonth(Date theDate) {
+        return theDate.toStartOfMonth().addMonths(1);
+    }
+
+    private static Boolean inColdStorageLastDayOfMonth(Matter__c matter, Date theDate) {
+        Date beginningOfNextMonth = beginningOfNextMonth(theDate);
+        for (Cold_Storage_Date_Range__c coldStorageDateRange : matter.Cold_Storage_Date_Ranges__r) {
+            if (coldStorageDateRange.Begin_Date__c != null &&
+                    coldStorageDateRange.Begin_Date__c < beginningOfNextMonth &&
+                    (coldStorageDateRange.End_Date__c == null || coldStorageDateRange.End_Date__c >= beginningOfNextMonth)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static String createGUID() {
+        Blob b = Crypto.GenerateAESKey(128);
+        String h = EncodingUtil.ConvertTohex(b);
+        return h.SubString(0, 8) + '-' + h.SubString(8, 12) + '-' + h.SubString(12, 16) + '-' + h.SubString(16, 20) + '-' + h.substring(20);
+    }
+}
