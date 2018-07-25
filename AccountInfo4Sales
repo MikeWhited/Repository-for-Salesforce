@@ -16,8 +16,9 @@
           <apex:column value="{!act.Site}"/>
           <apex:column value="{!act.id}"/>
         </apex:pageblockTable>
-        <apex:commandButton value="Export To Excel" action="/apex/AccountFetch"/>
     </apex:pageBlockSection>
+    <br/>
+    <apex:commandButton value="Export To Excel" action="/apex/AccountFetch"/>
          <br/>
     <apex:pageBlockSection collapsible="true" title="Contracts" columns="1">
          <apex:pageblockTable value="{!result3}" var="cont">
@@ -34,7 +35,10 @@
         <apex:pageblockTable value="{!result}" var="wl">
          <apex:column value="{!wl.name}"/>
           <apex:column value="{!wl.account.name}"/>
-          <apex:column value="{!wl.id}"/>
+          <apex:column value="{!wl.email}"/>
+           <apex:column value="{!wl.MailingCity}"/> 
+          <apex:column value="{!wl.Current_User__c}"/>
+          <apex:column value="{!wl.Inactive_User__c}"/>
         </apex:pageblockTable>
     </apex:pageBlockSection>
          <br/>
@@ -55,6 +59,14 @@
              <apex:column value="{!matt.Per_GB_Price_per_Month__c}"/>
     </apex:pageblockTable>   
  </apex:pageBlockSection>
+    <apex:pageBlockSection collapsible="true" title="Events" columns="1">
+         <apex:pageblockTable value="{!result5}" var="evn">
+            <apex:column value="{!evn.ActivityDate}"/>
+             <apex:column value="{!evn.Description}"/>
+             <apex:column value="{!evn.Type}"/>
+             <apex:column value="{!evn.What.name}"/>
+    	</apex:pageblockTable> 
+    </apex:pageBlockSection>
 </apex:pageBlock>
 </apex:form>
 </apex:page>
