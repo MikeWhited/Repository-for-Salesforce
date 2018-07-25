@@ -5,13 +5,10 @@ public class demoClass {
      public list<account> result2 {get; set;}
      public list<contract> result3 {get; set;}
      public list<matter__c> result4 {get; set;}
-     public democlass()
-     {
-      result = new list<Contact>();
-     }
+     public list<event> result5 {get; set;}
      public void searchbox(){
       result=new List<Contact>();
-      result=[select ID,Name,phone, account.name from Contact where account.Name like:'%'+searchboxstring+'%'];
+      result=[select ID,Name,phone, account.name,email,MailingCity,Current_User__c, Inactive_User__c, Title from Contact where account.Name like:'%'+searchboxstring+'%'];
       result1=new List<Opportunity>();
       result1=[select ID,Name, account.name from Opportunity where account.Name like:'%'+searchboxstring+'%'];
       result2=new List<Account>();
@@ -20,6 +17,9 @@ public class demoClass {
       result3=[select ID,Name, account.name,Price_Per_GB__c,SpecialTerms,SubscriptionPricePerMonth__c, EndDate, StartDate, Owner.name from Contract where account.Name like:'%'+searchboxstring+'%'];
       result4 = new list<Matter__c>();
       result4=[select ID,Name,Active__c,Salesperson__c,Total_Active_GB__c,Per_GB_Price_per_Month__c  from Matter__c where Contract_Billing_Account__c like:'%'+searchboxstring+'%' or Contract_EndUser_Account__c like:'%'+searchboxstring+'%'];   
+      result5 = new list<Event>();
+      result5=[select ID,ActivityDate,Description,Type,WhoId, What.name from Event where What.name like:'%'+searchboxstring+'%'];
      }
+    
 
 }
