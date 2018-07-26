@@ -1,0 +1,39 @@
+<apex:page controller="demoClass" contentType="application/vnd.ms-excel#MatterFetch.xls" cache="true">
+    <table>
+  <tr>
+    <th>Matter Name</th>
+    <th>Billing Account</th>
+    <th>EndUser Account</th>
+    <th>Active?</th>
+    <th>Total Active Data</th>
+    <th>Price per GB</th>
+    <th>Salesperson</th>
+  </tr>
+
+  <apex:repeat value="{!result4}" var="matt">
+    <tr>
+      <td>
+        <span>{!matt.name}</span>
+      </td>
+      <td>
+        <span>{!matt.Contract_Billing_Account__c}</span>
+      </td>
+      <td>
+        <span>{!matt.Contract_EndUser_Account__c}</span>
+      </td>
+      <td>
+        <span>{!matt.Active__c}</span>
+      </td>
+      <td>
+        <span>{!matt.Total_Active_GB__c}</span>
+      </td>
+      <td>
+        <span>{!matt.Per_GB_Price_per_Month__c}</span>
+      </td>
+        <td>
+        <span>{!matt.Salesperson__c}</span>
+      </td>
+    </tr>
+  </apex:repeat>
+</table>
+</apex:page>
