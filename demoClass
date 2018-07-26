@@ -20,3 +20,4 @@ public class demoClass {
       result5 = new list<Event>();
       result5=[select ID,ActivityDate,Description,Type,WhoId, What.name,Who.Name from Event where What.name like:'%'+searchboxstring+'%'];
      }
+}
