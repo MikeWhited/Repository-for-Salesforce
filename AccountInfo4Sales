@@ -5,32 +5,51 @@
  <apex:pageBlockSection columns="1">
  <apex:inputText value="{!searchBoxstring}" label="Search"/>
    <apex:commandButton value="Search" action="{!searchbox}" >
-
   </apex:commandButton>
  </apex:pageBlockSection>
+     <apex:pageBlockSection collapsible="true" title="Matters" columns="1">
+         <apex:pageblockTable value="{!result4}" var="matt">
+            <apex:column value="{!matt.name}"/>
+             <apex:column value="{!matt.Contract_Billing_Account__c}"/>
+             <apex:column value="{!matt.Contract_EndUser_Account__c}"/>
+             <apex:column value="{!matt.Active__c}"/>
+             <apex:column value="{!matt.Total_Active_GB__c}"/>
+             <apex:column value="{!matt.Per_GB_Price_per_Month__c}"/>
+             <apex:column value="{!matt.Salesperson__c}"/>
+    </apex:pageblockTable>   
+ </apex:pageBlockSection>
+     <br/>
+    <apex:commandButton value="Export To Excel" action="/apex/ContactFetch"/>
+         <br/>
     <apex:pageBlockSection collapsible="true" title="Accounts" columns="1">
         <apex:pageblockTable value="{!result2}" var="act">
          <apex:column value="{!act.name}"/>
           <apex:column value="{!act.owner.name}"/>
           <apex:column value="{!act.Closed_Won_Opptys__c}"/>
+          <apex:column value="{!act.BillingCity}"/>
           <apex:column value="{!act.Site}"/>
-          <apex:column value="{!act.id}"/>
         </apex:pageblockTable>
     </apex:pageBlockSection>
     <br/>
     <apex:commandButton value="Export To Excel" action="/apex/AccountFetch"/>
          <br/>
+    <br/>
     <apex:pageBlockSection collapsible="true" title="Contracts" columns="1">
          <apex:pageblockTable value="{!result3}" var="cont">
             <apex:column value="{!cont.name}"/>
+             <apex:column value="{!cont.ContractNumber}"/>
              <apex:column value="{!cont.account.name}"/>
-             <apex:column value="{!cont.id}"/>
+             <apex:column value="{!cont.Type__c}"/>
              <apex:column value="{!cont.Price_Per_GB__c}"/>
              <apex:column value="{!cont.SubscriptionPricePerMonth__c}"/>
+             <apex:column value="{!cont.MinimumMatterCharge__c}"/>
              <apex:column value="{!cont.StartDate}"/>
              <apex:column value="{!cont.EndDate}"/>
     </apex:pageblockTable>   
  </apex:pageBlockSection>
+    <br/>
+    <apex:commandButton value="Export To Excel" action="/apex/ContractFetch"/>
+         <br/>
     <apex:pageBlockSection collapsible="true" title="Contacts" columns="1">
         <apex:pageblockTable value="{!result}" var="wl">
          <apex:column value="{!wl.name}"/>
@@ -41,32 +60,35 @@
           <apex:column value="{!wl.Inactive_User__c}"/>
         </apex:pageblockTable>
     </apex:pageBlockSection>
+    <br/>
+    <apex:commandButton value="Export To Excel" action="/apex/ContactFetch"/>
          <br/>
+    <br/>
     <apex:pageBlockSection collapsible="true" title="Opportunities" columns="1">
          <apex:pageblockTable value="{!result1}" var="opp">
             <apex:column value="{!opp.name}"/>
              <apex:column value="{!opp.account.name}"/>
-             <apex:column value="{!opp.id}"/>
+             <apex:column value="{!opp.StageName}"/>
+             <apex:column value="{!opp.MRR_Amount__c}"/>
+             <apex:column value="{!opp.Primary_Contact__c}"/>
+             <apex:column value="{!opp.Owner.name}"/>
     </apex:pageblockTable>   
     </apex:pageBlockSection>
-        <br/>
-    <apex:pageBlockSection collapsible="true" title="Matters" columns="1">
-         <apex:pageblockTable value="{!result4}" var="matt">
-            <apex:column value="{!matt.name}"/>
-             <apex:column value="{!matt.Active__c}"/>
-             <apex:column value="{!matt.Salesperson__c}"/>
-             <apex:column value="{!matt.Total_Active_GB__c}"/>
-             <apex:column value="{!matt.Per_GB_Price_per_Month__c}"/>
-    </apex:pageblockTable>   
- </apex:pageBlockSection>
+    <br/>
+    <apex:commandButton value="Export To Excel" action="/apex/OppFetch"/>
+         <br/>
     <apex:pageBlockSection collapsible="true" title="Events" columns="1">
          <apex:pageblockTable value="{!result5}" var="evn">
             <apex:column value="{!evn.ActivityDate}"/>
-             <apex:column value="{!evn.Description}"/>
-             <apex:column value="{!evn.Type}"/>
              <apex:column value="{!evn.What.name}"/>
+             <apex:column value="{!evn.Who.name}"/>
+             <apex:column value="{!evn.Type}"/>
+             <apex:column value="{!evn.Description}"/>
     	</apex:pageblockTable> 
     </apex:pageBlockSection>
+    <br/>
+    <apex:commandButton value="Export To Excel" action="/apex/EventFetch"/>
+         <br/>
 </apex:pageBlock>
 </apex:form>
 </apex:page>
