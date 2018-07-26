@@ -1,0 +1,35 @@
+<apex:page controller="demoClass" contentType="application/vnd.ms-excel#OppFetch.xls" cache="true">
+    <table>
+  <tr>
+    <th>Opportunity Name</th>
+    <th>Account</th>
+    <th>Stage</th>
+    <th>MRR Amount</th>
+    <th>Primary Contact</th>
+    <th>Opp Owner</th>
+  </tr>
+
+  <apex:repeat value="{!result1}" var="opp">
+    <tr>
+      <td>
+        <span>{!opp.name}</span>
+      </td>
+      <td>
+        <span>{!opp.account.name}</span>
+      </td>
+      <td>
+        <span>{!opp.StageName}</span>
+      </td>
+      <td>
+        <span>{!opp.MRR_Amount__c}</span>
+      </td>
+      <td>
+        <span>{!opp.Primary_Contact__c}</span>
+      </td>
+      <td>
+        <span>{!opp.Owner.name}</span>
+      </td>
+    </tr>
+  </apex:repeat>
+</table>
+</apex:page>
