@@ -1,0 +1,35 @@
+<apex:page controller="demoClass" contentType="application/vnd.ms-excel#ContactFetch.xls" cache="true">
+    <table>
+  <tr>
+    <th>Contact Name</th>
+    <th>Account</th>
+    <th>email</th>
+    <th>Mailing City</th>
+    <th>Current User?</th>
+    <th>Inactive User?</th>
+  </tr>
+
+  <apex:repeat value="{!result}" var="wl">
+    <tr>
+      <td>
+        <span>{!wl.name}</span>
+      </td>
+      <td>
+        <span>{!wl.account.name}</span>
+      </td>
+      <td>
+        <span>{!wl.email}</span>
+      </td>
+      <td>
+        <span>{!wl.MailingCity}</span>
+      </td>
+      <td>
+        <span>{!wl.Current_User__c}</span>
+      </td>
+        <td>
+        <span>{!wl.Inactive_User__c}</span>
+      </td>
+    </tr>
+  </apex:repeat>
+</table>
+</apex:page>
