@@ -9,13 +9,24 @@
  </apex:pageBlockSection>
      <apex:pageBlockSection collapsible="true" title="Matters" columns="1">
          <apex:pageblockTable value="{!result4}" var="matt">
-            <apex:column value="{!matt.name}"/>
-             <apex:column value="{!matt.Contract_Billing_Account__c}"/>
-             <apex:column value="{!matt.Contract_EndUser_Account__c}"/>
-             <apex:column value="{!matt.Active__c}"/>
-             <apex:column value="{!matt.Total_Active_GB__c}"/>
-             <apex:column value="{!matt.Per_GB_Price_per_Month__c}"/>
-             <apex:column value="{!matt.Salesperson__c}"/>
+            <apex:column headerValue="Matter Name">             
+             <!--   	<apex:facet name="header">   
+                    <apex:commandLink action="{!ViewData}" value="Matter Name{!IF(sortExpression=='name',IF(sortDirection='ASC','▼','▲'),'')}" id="cmdSort">
+                        <apex:param value="name" name="column" assignTo="{!sortExpression}" ></apex:param>
+                    </apex:commandLink>
+                	</apex:facet> -->            
+                <apex:outputLink value="/{!matt.Id}" target="_blank">{!matt.name}</apex:outputLink>
+             </apex:column>
+             <apex:column headerValue="Billing Account">
+             	<apex:outputLink value="/{!matt.Id}" target="_blank">{!matt.Contract_Billing_Account__c}</apex:outputLink>
+             </apex:column> 
+             <apex:column headerValue="End User Account">
+             	<apex:outputLink value="/{!matt.Id}" target="_blank">{!matt.Contract_EndUser_Account__c}</apex:outputLink>
+             </apex:column>
+             <apex:column headerValue="Is Active?" value="{!matt.Active__c}"/>
+             <apex:column headerValue="Active GB" value="{!matt.Total_Active_GB__c}"/>
+             <apex:column headerValue="Price per GB" value="{!matt.Per_GB_Price_per_Month__c}"/>
+             <apex:column headerValue="Salesperson" value="{!matt.Salesperson__c}"/>
     </apex:pageblockTable>   
  </apex:pageBlockSection>
      <br/>
@@ -23,11 +34,13 @@
          <br/>
     <apex:pageBlockSection collapsible="true" title="Accounts" columns="1">
         <apex:pageblockTable value="{!result2}" var="act">
-         <apex:column value="{!act.name}"/>
-          <apex:column value="{!act.owner.name}"/>
-          <apex:column value="{!act.Closed_Won_Opptys__c}"/>
-          <apex:column value="{!act.BillingCity}"/>
-          <apex:column value="{!act.Site}"/>
+         <apex:column headerValue="Account Name">
+             	<apex:outputLink value="/{!act.Id}" target="_blank">{!act.name}</apex:outputLink>
+          </apex:column>
+          <apex:column headerValue="Account Owner" value="{!act.owner.name}"/>
+          <apex:column headerValue="# of Won Opps" value="{!act.Closed_Won_Opptys__c}"/>
+          <apex:column headerValue="Billing City" value="{!act.BillingCity}"/>
+          <apex:column headerValue="Account Site" value="{!act.Site}"/>
         </apex:pageblockTable>
     </apex:pageBlockSection>
     <br/>
@@ -36,15 +49,17 @@
     <br/>
     <apex:pageBlockSection collapsible="true" title="Contracts" columns="1">
          <apex:pageblockTable value="{!result3}" var="cont">
-            <apex:column value="{!cont.name}"/>
-             <apex:column value="{!cont.ContractNumber}"/>
-             <apex:column value="{!cont.account.name}"/>
-             <apex:column value="{!cont.Type__c}"/>
-             <apex:column value="{!cont.Price_Per_GB__c}"/>
-             <apex:column value="{!cont.SubscriptionPricePerMonth__c}"/>
-             <apex:column value="{!cont.MinimumMatterCharge__c}"/>
-             <apex:column value="{!cont.StartDate}"/>
-             <apex:column value="{!cont.EndDate}"/>
+            <apex:column headerValue="Contract Name" value="{!cont.name}"/>
+             <apex:column headerValue="Contract Number">
+             	<apex:outputLink value="/{!cont.Id}" target="_blank">{!cont.ContractNumber}</apex:outputLink>
+             </apex:column>
+             <apex:column headerValue="Account Name" value="{!cont.account.name}"/>
+             <apex:column headerValue="Type" value="{!cont.Type__c}"/>
+             <apex:column headerValue="Price Per GB" value="{!cont.Price_Per_GB__c}"/>
+             <apex:column headerValue="Subscription Price" value="{!cont.SubscriptionPricePerMonth__c}"/>
+             <apex:column headerValue="Matter Minimum" value="{!cont.MinimumMatterCharge__c}"/>
+             <apex:column headerValue="Start Date" value="{!cont.StartDate}"/>
+             <apex:column headerValue="End Date" value="{!cont.EndDate}"/>
     </apex:pageblockTable>   
  </apex:pageBlockSection>
     <br/>
@@ -52,12 +67,16 @@
          <br/>
     <apex:pageBlockSection collapsible="true" title="Contacts" columns="1">
         <apex:pageblockTable value="{!result}" var="wl">
-         <apex:column value="{!wl.name}"/>
-          <apex:column value="{!wl.account.name}"/>
-          <apex:column value="{!wl.email}"/>
-           <apex:column value="{!wl.MailingCity}"/> 
-          <apex:column value="{!wl.Current_User__c}"/>
-          <apex:column value="{!wl.Inactive_User__c}"/>
+         <apex:column headerValue="Contact Name">
+             	<apex:outputLink value="/{!wl.Id}" target="_blank">{!wl.name}</apex:outputLink>
+             </apex:column>
+         <apex:column headerValue="Account Name">
+             <apex:outputLink value="/{!wl.account.Id}" target="_blank">{!wl.account.name}</apex:outputLink>
+          </apex:column>
+          <apex:column headerValue="Email" value="{!wl.email}"/>
+           <apex:column headerValue="Mailing City" value="{!wl.MailingCity}"/> 
+          <apex:column headerValue="Current User?" value="{!wl.Current_User__c}"/>
+          <apex:column headerValue="Inactive User?" value="{!wl.Inactive_User__c}"/>
         </apex:pageblockTable>
     </apex:pageBlockSection>
     <br/>
@@ -66,12 +85,16 @@
     <br/>
     <apex:pageBlockSection collapsible="true" title="Opportunities" columns="1">
          <apex:pageblockTable value="{!result1}" var="opp">
-            <apex:column value="{!opp.name}"/>
-             <apex:column value="{!opp.account.name}"/>
-             <apex:column value="{!opp.StageName}"/>
-             <apex:column value="{!opp.MRR_Amount__c}"/>
-             <apex:column value="{!opp.Primary_Contact__c}"/>
-             <apex:column value="{!opp.Owner.name}"/>
+            <apex:column headerValue="Opportunity Name">
+             <apex:outputLink value="/{!opp.Id}" target="_blank">{!opp.name}</apex:outputLink>
+             </apex:column>
+             <apex:column headerValue="Account Name">
+             <apex:outputLink value="/{!opp.account.Id}" target="_blank">{!opp.account.name}</apex:outputLink>
+             </apex:column>
+             <apex:column headerValue="Stage" value="{!opp.StageName}"/>
+             <apex:column headerValue="Estimated MRR" value="{!opp.MRR_Amount__c}"/>
+             <apex:column headerValue="Primary Contact" value="{!opp.Primary_Contact__c}"/>
+             <apex:column headerValue="Opp Owner" value="{!opp.Owner.name}"/>
     </apex:pageblockTable>   
     </apex:pageBlockSection>
     <br/>
@@ -79,11 +102,17 @@
          <br/>
     <apex:pageBlockSection collapsible="true" title="Events" columns="1">
          <apex:pageblockTable value="{!result5}" var="evn">
-            <apex:column value="{!evn.ActivityDate}"/>
-             <apex:column value="{!evn.What.name}"/>
-             <apex:column value="{!evn.Who.name}"/>
-             <apex:column value="{!evn.Type}"/>
-             <apex:column value="{!evn.Description}"/>
+            <apex:column headerValue="Event">
+              <apex:outputLink value="/{!evn.Id}" target="_blank">{!evn.Type}</apex:outputLink>
+            </apex:column>
+            <apex:column headerValue="Date" value="{!evn.ActivityDate}"/>
+            <apex:column headerValue="Related to:">
+            <apex:outputLink value="/{!evn.WhatId}" target="_blank">{!evn.What.name}</apex:outputLink>
+              </apex:column> 
+            <apex:column headerValue="Contact">
+              <apex:outputLink value="/{!evn.WhoId}" target="_blank">{!evn.Who.name}</apex:outputLink>
+            </apex:column> 
+            <apex:column headerValue="Description" value="{!evn.Description}"/>
     	</apex:pageblockTable> 
     </apex:pageBlockSection>
     <br/>
