@@ -26,6 +26,8 @@
              <apex:column headerValue="Is Active?" value="{!matt.Active__c}"/>
              <apex:column headerValue="Active GB" value="{!matt.Total_Active_GB__c}"/>
              <apex:column headerValue="Price per GB" value="{!matt.Per_GB_Price_per_Month__c}"/>
+             <apex:column headerValue="Started" value="{!matt.First_Data_Set_Date__c}"/>
+             <apex:column headerValue="Deactivated" value="{!matt.DeactivationDate__c}"/>
              <apex:column headerValue="Salesperson" value="{!matt.Salesperson__c}"/>
     </apex:pageblockTable>   
  </apex:pageBlockSection>
