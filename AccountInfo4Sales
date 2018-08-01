@@ -2,7 +2,7 @@
 <apex:form >
 <apex:pageBlock title="Hello {!$User.FirstName}! Thanks for using this app to find the info you need,">
 	If there are any ideas you have for this page, or things that you belive will make the experience better, please slack "whited" or email them to whited@csdisco.com. Thanks!
- <apex:pageBlockSection columns="1">
+ <apex:pageBlockSection title="Here you can search an account, A sales rep, or a city, just make sure you click the right search button" columns="1">
  <apex:inputText value="{!searchBoxstring}" label="Search"/>
     </apex:pageBlockSection>
  <apex:pageBlockSection columns="3">
