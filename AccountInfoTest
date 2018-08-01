@@ -1,0 +1,12 @@
+@istest
+public class AccountInfoTest{
+public static testmethod void searchMethod(){
+ demoClass cs = new demoClass();
+ 
+
+ cs.searchbox();
+ cs.searchbox1();
+ cs.searchbox2();
+
+}
+}
