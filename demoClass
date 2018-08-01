@@ -38,31 +38,9 @@ public with sharing class demoClass {
       result2=new List<Account>();
       result2=[select ID,Name, Owner.name,Closed_Won_Opptys__c, Site, BillingCity from Account where BillingCity like:'%'+searchboxstring+'%'];
     }
-	 public static void fakeMethod(){
+    public static void fakeMethod(){
     Integer i = 0;
     i++;
-    i++;
-    i++;
-    i++;
-    i++;
-    i++;
-    i++;
-    i++;
-    i++;
-    i++;
-    i++;
-    i++;
-    i++;
-    i++;
-    i++;
-    i++;
-    i++;
-    i++;
-    i++;
-    i++;
-    i++;
-    i++;     
-
-
   }
+
 }
