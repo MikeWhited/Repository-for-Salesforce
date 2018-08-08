@@ -1,0 +1,138 @@
+public with sharing class demoClass {
+	public string searchboxstring{get; set;}
+     public list<contact> result {get; set;}
+     public list<opportunity> result1 {get; set;}
+     public list<account> result2 {get; set;}
+     public list<contract> result3 {get; set;}
+     public list<matter__c> result4 {get; set;}
+     public list<event> result5 {get; set;}
+     public Integer rec { get; set; }
+     public Integer rec1 { get; set; }
+     public Integer rec2 { get; set; }
+     public Integer rec3 { get; set; }
+     public Integer rec4 { get; set; }
+     public Integer rec5 { get; set; }
+     integer totalRecs=0;
+     integer count=0;     
+     integer limitsize=1;
+     public integer total_size;
+     public integer total_size1;
+     public integer total_size2;
+     public integer total_size3;
+     public integer total_size4;
+     public integer total_size5;
+     public void searchbox(){
+      result=new List<Contact>();
+      result=[select ID,Name,phone, account.name,account.ID,email,MailingCity,Title,Current_User__c, Inactive_User__c from Contact where account.Name like:'%'+searchboxstring+'%'LIMIT:rec OFFSET:count];
+      total_size=[select count() from Contact where account.Name like:'%'+searchboxstring+'%'];
+      result1=new List<Opportunity>();
+      result1=[select ID,Name, account.name,owner.name,StageName,MRR_Amount__c,Primary_Contact__c from Opportunity where account.Name like:'%'+searchboxstring+'%'LIMIT:rec1 OFFSET:count];
+      total_size1=[select count() from Opportunity where account.Name like:'%'+searchboxstring+'%'];
+      result2=new List<Account>();
+      result2=[select ID,Name, Owner.name,Closed_Won_Opptys__c, Site, BillingCity from Account where Name like:'%'+searchboxstring+'%'LIMIT:rec1 OFFSET:count];
+      total_size2=[select count() from Account where Name like:'%'+searchboxstring+'%'];
+      result3=new List<Contract>();
+      result3=[select ID,Name, account.name,Price_Per_GB__c,SpecialTerms,SubscriptionPricePerMonth__c,ContractNumber, EndDate, StartDate, Owner.name,Type__c, MinimumMatterCharge__c from Contract where account.Name like:'%'+searchboxstring+'%'LIMIT:rec1 OFFSET:count];
+      total_size3=[select count() from Contract where account.Name like:'%'+searchboxstring+'%'];
+      result4 = new list<Matter__c>();
+      result4=[select ID,Name,Active__c,First_Data_Set_Date__c,DeactivationDate__c, Salesperson__c,Total_Active_GB__c,Per_GB_Price_per_Month__c, Contract_Billing_Account__c, Contract_EndUser_Account__c,Matter_EndClientAccount__c,Matter_EndClientAccount__r.name,Billing_Account2__c,Matter_End_User__c from Matter__c where Active__c = true AND (Contract_Billing_Account__c like:'%'+searchboxstring+'%' or Contract_EndUser_Account__c like:'%'+searchboxstring+'%' or Matter_EndClientAccount__r.name like:'%'+searchboxstring+'%')LIMIT:rec1 OFFSET:count];   
+      total_size4=[select count() from Matter__c where Active__c = true AND (Contract_Billing_Account__c like:'%'+searchboxstring+'%' or Contract_EndUser_Account__c like:'%'+searchboxstring+'%' or Matter_EndClientAccount__r.name like:'%'+searchboxstring+'%')];
+      result5 = new list<Event>();
+      result5=[select ID,ActivityDate,Description,Type,WhoId, What.name,Who.Name,WhatId from Event where What.name like:'%'+searchboxstring+'%'LIMIT:rec1 OFFSET:count];
+      total_size5=[select count() from Event where What.name like:'%'+searchboxstring+'%'];      
+     }
+    public void searchbox1(){
+      result1=new List<Opportunity>();
+      result1=[select ID,Name, account.name,owner.name,StageName,MRR_Amount__c,Primary_Contact__c from Opportunity where owner.Name like:'%'+searchboxstring+'%'];
+      total_size1=[select count() from Opportunity where owner.Name like:'%'+searchboxstring+'%'];
+      result2=new List<Account>();
+      result2=[select ID,Name, Owner.name,Closed_Won_Opptys__c, Site, BillingCity from Account where owner.Name like:'%'+searchboxstring+'%' LIMIT 1000];
+      total_size2=[select count() from Account where owner.Name like:'%'+searchboxstring+'%' LIMIT 1000];
+      result4 = new list<Matter__c>();
+      result4=[select ID,Name,Active__c,First_Data_Set_Date__c,DeactivationDate__c, Salesperson__c,SalespersonText__c,Salesperson2Text__c,Salesperson3Text__c,Total_Active_GB__c,Per_GB_Price_per_Month__c, Contract_Billing_Account__c, Contract_EndUser_Account__c,Matter_EndClientAccount__c,Matter_EndClientAccount__r.name,Billing_Account2__c,Matter_End_User__c from Matter__c where Active__c = true AND (SalespersonText__c like:'%'+searchboxstring+'%' or Salesperson2Text__c like:'%'+searchboxstring+'%' or Salesperson3Text__c like:'%'+searchboxstring+'%') LIMIT 1000];  
+      total_size4=[select count() from Matter__c where Active__c = true AND (SalespersonText__c like:'%'+searchboxstring+'%' or Salesperson2Text__c like:'%'+searchboxstring+'%' or Salesperson3Text__c like:'%'+searchboxstring+'%') LIMIT 1000]; 
+    }
+    public void searchbox2(){
+      result=new List<Contact>();
+      result=[select ID,Name,phone,ownerId,owner.name, account.name,account.ID,email,MailingCity,Title,Current_User__c, Inactive_User__c from Contact where MailingCity like:'%'+searchboxstring+'%' LIMIT 1000];
+      total_size=[select count() from Contact where MailingCity like:'%'+searchboxstring+'%' LIMIT 1000];
+      result1=new List<Opportunity>();
+      result1=[select ID,Name, account.name,owner.name,StageName,MRR_Amount__c,Primary_Contact__c,account.BillingCity from Opportunity where account.BillingCity like:'%'+searchboxstring+'%'];
+      total_size1=[select count() from Opportunity where account.BillingCity like:'%'+searchboxstring+'%'];
+      result2=new List<Account>();
+      result2=[select ID,Name, Owner.name,Closed_Won_Opptys__c, Site, BillingCity from Account where BillingCity like:'%'+searchboxstring+'%' LIMIT 1000];
+      total_size2=[select count() from Account where BillingCity like:'%'+searchboxstring+'%' LIMIT 1000];
+    }
+    public void updatePage() {
+       result.clear();
+       limitsize=rec;
+       TotalRecs=total_size;
+       result=[select ID,Name,phone, account.name,account.ID,email,MailingCity,Title,Current_User__c, Inactive_User__c from Contact where account.Name like:'%'+searchboxstring+'%'LIMIT:rec OFFSET:count];
+    }
+    public void updatePage1() {
+       result1.clear();
+       limitsize=rec1;
+       TotalRecs=total_size1;
+       result1=[select ID,Name, account.name,owner.name,StageName,MRR_Amount__c,Primary_Contact__c from Opportunity where account.Name like:'%'+searchboxstring+'%'LIMIT:rec1 OFFSET:count];
+    }
+    public void updatePage2() {
+       result2.clear();
+       limitsize=rec2;
+       TotalRecs=total_size2;
+       result2=[select ID,Name, Owner.name,Closed_Won_Opptys__c, Site, BillingCity from Account where Name like:'%'+searchboxstring+'%'LIMIT:rec2 OFFSET:count]; 
+    }
+    public void updatePage3() {
+       result3.clear();
+       limitsize=rec3;
+       TotalRecs=total_size3;
+       result3=[select ID,Name, account.name,Price_Per_GB__c,SpecialTerms,SubscriptionPricePerMonth__c,ContractNumber, EndDate, StartDate, Owner.name,Type__c, MinimumMatterCharge__c from Contract where account.Name like:'%'+searchboxstring+'%'LIMIT:rec1 OFFSET:count];
+    }
+    public void updatePage4() {
+       result4.clear();
+       limitsize=rec4;
+       TotalRecs=total_size4;
+       result4=[select ID,Name,Active__c,First_Data_Set_Date__c,DeactivationDate__c, Salesperson__c,Total_Active_GB__c,Per_GB_Price_per_Month__c, Contract_Billing_Account__c, Contract_EndUser_Account__c,Matter_EndClientAccount__c,Matter_EndClientAccount__r.name,Billing_Account2__c,Matter_End_User__c from Matter__c where Active__c = true AND (Contract_Billing_Account__c like:'%'+searchboxstring+'%' or Contract_EndUser_Account__c like:'%'+searchboxstring+'%' or Matter_EndClientAccount__r.name like:'%'+searchboxstring+'%')LIMIT:rec1 OFFSET:count];   
+    }
+    public void updatePage5() {
+       result5.clear();
+       limitsize=rec5;
+       TotalRecs=total_size5;
+       result5=[select ID,ActivityDate,Description,Type,WhoId, What.name,Who.Name,WhatId from Event where What.name like:'%'+searchboxstring+'%'LIMIT:rec1 OFFSET:count];
+    }
+     public PageReference Firstbtn() {
+     count=0;
+        return null;
+    }
+      public PageReference prvbtn() {
+      count=count-limitsize;
+        return null;
+    }
+      public PageReference Nxtbtn() {
+      count=count+limitsize;
+        return null;
+    }
+      public PageReference lstbtn() {
+      count= totalrecs - math.mod(totalRecs,LimitSize);
+        return null;
+    }
+      public Boolean getNxt() {
+        if((count+ LimitSize) > totalRecs)
+       return true;
+      else
+       return false;
+        
+    }
+     public Boolean getPrv() {
+      if(count== 0)
+          return true;
+        else
+          return false;
+     
+    
+        }
+    public static void fakeMethod(){
+    Integer i = 0;
+    i++;
+  }
+
+}
