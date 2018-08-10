@@ -1,0 +1,25 @@
+public class RepInfo {
+		public string searchboxstring{get; set;}
+        public list<opportunity> Opps {get; set;} 
+        public list<account> Accts {get; set;}
+        public list<matter__c> Mats {get; set;}
+        public list<event> Evnt {get; set;}
+        public Integer NumOfMatters {get; set;}
+        public Decimal GBSize {get; set;}
+    public void SearchRep(){
+    	Opps=new List<Opportunity>();
+        Opps=[select ID,Name, account.name,owner.name,StageName,MRR_Amount__c,Primary_Contact__c from Opportunity where (StageName != 'Closed Won' AND StageName != 'Closed Loss') AND owner.Name like:'%'+searchboxstring+'%'];
+        Accts=new List<Account>();
+        Accts=[select ID,Name, Owner.name,Closed_Won_Opptys__c, Site, BillingCity from Account where owner.Name like:'%'+searchboxstring+'%' LIMIT 1000];
+        Mats = new list<Matter__c>();
+        Mats=[select ID,Name,Active__c,First_Data_Set_Date__c,DeactivationDate__c, Salesperson__c,SalespersonText__c,Salesperson2Text__c,Salesperson3Text__c,Total_Active_GB__c,Per_GB_Price_per_Month__c, Contract_Billing_Account__c, Contract_EndUser_Account__c,Matter_EndClientAccount__c,Matter_EndClientAccount__r.name,Billing_Account2__c,Matter_End_User__c from Matter__c where Active__c = true AND (SalespersonText__c like:'%'+searchboxstring+'%' or Salesperson2Text__c like:'%'+searchboxstring+'%' or Salesperson3Text__c like:'%'+searchboxstring+'%') LIMIT 1000];  
+        Evnt = new list<Event>();
+        Evnt =[select ID,ActivityDate,Description,Type,WhoId, What.name,Who.Name,WhatId,CreatedById from Event where CreatedBy.Name like:'%'+searchboxstring+'%'LIMIT 1000];
+        decimal tempSum = 0;
+        for(Matter__c matt:Mats){
+            tempSum += matt.Total_Active_GB__c;
+        }
+        GBSize = tempSum;
+        NumOfMatters = Mats.size();
+        }
+}
