@@ -1,0 +1,90 @@
+<apex:page controller="RepInfo" lightningStylesheets="true" cache="true">
+    <apex:form >
+        <apex:pageBlock title="Hello {!$User.FirstName}! Thanks for using this app to find the info you need,">
+	If there are any ideas you have for this page, or things that you belive will make the experience better, please slack "whited" or email them to whited@csdisco.com. Thanks!
+        <apex:pageBlockSection collapsible="false" title="Here you can search a sales rep and find thier open opportunities, owned accounts, active matters, and events they created" columns="1">
+           <apex:inputText value="{!searchBoxstring}" label="Search"/>
+        </apex:pageBlockSection>
+            <apex:pageBlockSection columns="1">
+   <apex:commandButton value="Search Rep" action="{!SearchRep}" >
+  </apex:commandButton>
+ </apex:pageBlockSection>
+            <apex:pageBlockSection>
+            Congratulations {!searchboxstring}! you currently have {!NumOfMatters} active matters that are hosting {!GBSize} GBs of data!
+            </apex:pageBlockSection>
+            <apex:pageBlockSection id="pg1" collapsible="true" title="Matters" columns="1">
+         This Matters list has be made so that it includes matters where the firm you search is listed on the "Originating Relationship" field on the matter, this field is used when there is an outside counsel, or if we're billing their client directly this field is where the firm should go. If you're interested in only the matters that we bill the client, or that they're the End Users for, ignore matters where they're not listed as the Billing or End User Account.
+         <br/>
+         <apex:pageblockTable value="{!Mats}" var="matt">
+            <apex:column headerValue="Matter Name">                    
+                <apex:outputLink value="/{!matt.Id}" target="_blank">{!matt.name}</apex:outputLink>
+             </apex:column>
+             <apex:column headerValue="Billing Account">
+             	<apex:outputLink value="/{!matt.Billing_Account2__c}" target="_blank">{!matt.Contract_Billing_Account__c}</apex:outputLink>
+             </apex:column> 
+             <apex:column headerValue="End User Account">
+             	<apex:outputLink value="/{!matt.Matter_End_User__c}" target="_blank">{!matt.Contract_EndUser_Account__c}</apex:outputLink>
+             </apex:column>
+             <apex:column headerValue="Is Active?" value="{!matt.Active__c}"/>
+             <apex:column headerValue="Active GB" value="{!matt.Total_Active_GB__c}"/>
+             <apex:column headerValue="Price per GB" value="{!matt.Per_GB_Price_per_Month__c}"/>
+             <apex:column headerValue="Started" value="{!matt.First_Data_Set_Date__c}"/>
+             <apex:column headerValue="Deactivated" value="{!matt.DeactivationDate__c}"/>
+             <apex:column headerValue="Salesperson" value="{!matt.Salesperson__c}"/>
+            </apex:pageblockTable>
+           </apex:pageBlockSection>
+         <br/>
+            <apex:commandButton value="Export To Excel" action="/apex/RepMatterFetch"/>
+         <br/>
+            <apex:pageBlockSection collapsible="true" title="Accounts" columns="1">
+        <apex:pageblockTable value="{!Accts}" var="act">
+         <apex:column headerValue="Account Name">
+             	<apex:outputLink value="/{!act.Id}" target="_blank">{!act.name}</apex:outputLink>
+          </apex:column>
+          <apex:column headerValue="Account Owner" value="{!act.owner.name}"/>
+          <apex:column headerValue="# of Won Opps" value="{!act.Closed_Won_Opptys__c}"/>
+          <apex:column headerValue="Billing City" value="{!act.BillingCity}"/>
+          <apex:column headerValue="Account Site" value="{!act.Site}"/>
+        </apex:pageblockTable>
+    </apex:pageBlockSection>
+    <br/>
+       <apex:commandButton value="Export To Excel" action="/apex/AccountFetch"/>
+    <br/>
+            <apex:pageBlockSection collapsible="true" title="Opportunities" columns="1">
+         <apex:pageblockTable value="{!Opps}" var="opp">
+            <apex:column headerValue="Opportunity Name">
+             <apex:outputLink value="/{!opp.Id}" target="_blank">{!opp.name}</apex:outputLink>
+             </apex:column>
+             <apex:column headerValue="Account Name">
+             <apex:outputLink value="/{!opp.account.Id}" target="_blank">{!opp.account.name}</apex:outputLink>
+             </apex:column>
+             <apex:column headerValue="Stage" value="{!opp.StageName}"/>
+             <apex:column headerValue="Estimated MRR" value="{!opp.MRR_Amount__c}"/>
+             <apex:column headerValue="Primary Contact" value="{!opp.Primary_Contact__c}"/>
+             <apex:column headerValue="Opp Owner" value="{!opp.Owner.name}"/>
+    </apex:pageblockTable>   
+    </apex:pageBlockSection>
+    <br/>
+    <apex:commandButton value="Export To Excel" action="/apex/Rep_OppFetch"/>
+         <br/>
+      <apex:pageBlockSection collapsible="true" title="Events" columns="1">
+         <apex:pageblockTable value="{!Evnt}" var="evn">
+            <apex:column headerValue="Event">
+              <apex:outputLink value="/{!evn.Id}" target="_blank">{!evn.Type}</apex:outputLink>
+            </apex:column>
+            <apex:column headerValue="Date" value="{!evn.ActivityDate}"/>
+            <apex:column headerValue="Related to:">
+            <apex:outputLink value="/{!evn.WhatId}" target="_blank">{!evn.What.name}</apex:outputLink>
+              </apex:column> 
+            <apex:column headerValue="Contact">
+              <apex:outputLink value="/{!evn.WhoId}" target="_blank">{!evn.Who.name}</apex:outputLink>
+            </apex:column> 
+            <apex:column headerValue="Description" value="{!evn.Description}"/>
+    	</apex:pageblockTable> 
+    </apex:pageBlockSection>
+    <br/>
+    <apex:commandButton value="Export To Excel" action="/apex/EventFetch"/>
+         <br/>
+       </apex:pageBlock>
+    </apex:form>
+</apex:page>
