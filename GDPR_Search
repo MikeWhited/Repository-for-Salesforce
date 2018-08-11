@@ -1,0 +1,26 @@
+<apex:page controller="GDPRclass" lightningStylesheets="true" cache="true"> 
+<apex:form >
+    <apex:pageBlock title="Hello {!$User.FirstName}! Thanks for using this app to find the info you need,">
+	If there are any ideas you have for this page, or things that you belive will make the experience better, please slack "whited" or email them to whited@csdisco.com. Thanks!
+        <apex:pageBlockSection collapsible="false" columns="1">
+           <apex:inputText value="{!searchboxstring}" label="Search"/>
+        </apex:pageBlockSection>
+        <apex:pageBlockSection columns="1">
+   <apex:commandButton value="Search Person" action="{!SearchAll}" >
+  </apex:commandButton>
+ </apex:pageBlockSection>
+        <apex:pageBlockSection collapsible="true" title="Contacts" columns="1">
+         <br/>
+         <apex:pageblockTable value="{!result}" var="cont">
+            <apex:column headerValue="Contact Name">                    
+                <apex:outputLink value="/{!cont.Id}" target="_blank">{!cont.name}</apex:outputLink>
+             </apex:column>
+             <apex:column headerValue="Account Name">                    
+                <apex:outputLink value="/{!cont.Account}" target="_blank">{!cont.account.name}</apex:outputLink>
+             </apex:column>
+             <apex:column headerValue="Email" value="{!cont.email}"/>
+            </apex:pageblockTable>
+           </apex:pageBlockSection>
+    </apex:pageBlock>
+</apex:form>
+</apex:page>
