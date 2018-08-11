@@ -1,0 +1,18 @@
+public with sharing class GDPRclass {
+	public string searchboxstring{get; set;}
+    List<List<sObject>> GetAll {get; set;}
+     public list<contact> result {get; set;}
+     public list<opportunity> result1 {get; set;}
+     public list<account> result2 {get; set;}
+     public list<CustomerStory__c> result3 {get; set;}
+     public list<Zendesk__Zendesk_Ticket__c> result4 {get; set;}
+     public list<event> result5 {get; set;}
+     public list<Matter_Billing_Contact__c> result6 {get; set;}
+     public void SearchAll (){
+       String searchStr = '*'+searchboxstring+'*';
+       String searchQ = 'FIND \'' + searchStr + '\' IN ALL FIELDS RETURNING Contact (id, name, email, account.Id, account.name),Account (id, name, BillingCity), Opportunity (id, name, Primary_Contact__c)';
+       List<List <sObject>> GetAll = search.query(searchQ);
+       result =new List <Contact>();
+       result = ((List<Contact>)GetAll[0]);
+}
+}
