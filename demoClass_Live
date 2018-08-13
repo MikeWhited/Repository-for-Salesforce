@@ -6,6 +6,11 @@ public with sharing class demoClass {
      public list<contract> result3 {get; set;}
      public list<matter__c> result4 {get; set;}
      public list<event> result5 {get; set;}
+     public list<matter__c> result6 {get; set;}
+     public Integer NumOfActMatters {get; set;}
+     public Decimal ActGBSize {get; set;}
+     public Integer NumOfTotalMatters {get; set;}
+     public Decimal TotalGBSize {get; set;}
      public void searchbox(){
       result=new List<Contact>();
       result=[select ID,Name,phone, account.name,account.ID,email,MailingCity,Title,Current_User__c, Inactive_User__c from Contact where account.Name like:'%'+searchboxstring+'%'];
@@ -16,31 +21,28 @@ public with sharing class demoClass {
       result3=new List<Contract>();
       result3=[select ID,Name, account.name,Price_Per_GB__c,SpecialTerms,SubscriptionPricePerMonth__c,ContractNumber, EndDate, StartDate, Owner.name,Type__c, MinimumMatterCharge__c from Contract where account.Name like:'%'+searchboxstring+'%'];
       result4 = new list<Matter__c>();
-      result4=[select ID,Name,Active__c,First_Data_Set_Date__c,DeactivationDate__c, Salesperson__c,Total_Active_GB__c,Per_GB_Price_per_Month__c, Contract_Billing_Account__c, Contract_EndUser_Account__c,Matter_EndClientAccount__c,Matter_EndClientAccount__r.name,Billing_Account2__c,Matter_End_User__c from Matter__c where Contract_Billing_Account__c like:'%'+searchboxstring+'%' or Contract_EndUser_Account__c like:'%'+searchboxstring+'%' or Matter_EndClientAccount__r.name like:'%'+searchboxstring+'%'];   
+      result4=[select ID,Name,Active__c,First_Data_Set_Date__c,DeactivationDate__c, Salesperson__c,Total_Active_GB__c,Total_GB__c, Per_GB_Price_per_Month__c, Contract_Billing_Account__c, Contract_EndUser_Account__c,Matter_EndClientAccount__c,Matter_EndClientAccount__r.name,Billing_Account2__c,Matter_End_User__c from Matter__c where Contract_Billing_Account__c like:'%'+searchboxstring+'%' or Contract_EndUser_Account__c like:'%'+searchboxstring+'%' or Matter_EndClientAccount__r.name like:'%'+searchboxstring+'%' Order by Active__c DESC];   
       result5 = new list<Event>();
       result5=[select ID,ActivityDate,Description,Type,WhoId, What.name,Who.Name,WhatId from Event where What.name like:'%'+searchboxstring+'%'];
-     }
-    public void searchbox1(){
-      result=new List<Contact>();
-      result=[select ID,Name,phone,ownerId,owner.name, account.name,account.ID,email,MailingCity,Title,Current_User__c, Inactive_User__c from Contact where owner.Name like:'%'+searchboxstring+'%'];
-      result1=new List<Opportunity>();
-      result1=[select ID,Name, account.name,owner.name,StageName,MRR_Amount__c,Primary_Contact__c from Opportunity where owner.Name like:'%'+searchboxstring+'%'];
-      result2=new List<Account>();
-      result2=[select ID,Name, Owner.name,Closed_Won_Opptys__c, Site, BillingCity from Account where owner.Name like:'%'+searchboxstring+'%'];
-      result4 = new list<Matter__c>();
-      result4=[select ID,Name,Active__c,First_Data_Set_Date__c,DeactivationDate__c, Salesperson__c,SalespersonText__c,Total_Active_GB__c,Per_GB_Price_per_Month__c, Contract_Billing_Account__c, Contract_EndUser_Account__c,Matter_EndClientAccount__c,Matter_EndClientAccount__r.name,Billing_Account2__c,Matter_End_User__c from Matter__c where SalespersonText__c like:'%'+searchboxstring+'%'];  
-    }
-    public void searchbox2(){
-      result=new List<Contact>();
-      result=[select ID,Name,phone,ownerId,owner.name, account.name,account.ID,email,MailingCity,Title,Current_User__c, Inactive_User__c from Contact where MailingCity like:'%'+searchboxstring+'%'];
-      result1=new List<Opportunity>();
-      result1=[select ID,Name, account.name,owner.name,StageName,MRR_Amount__c,Primary_Contact__c,account.BillingCity from Opportunity where account.BillingCity like:'%'+searchboxstring+'%'];
-      result2=new List<Account>();
-      result2=[select ID,Name, Owner.name,Closed_Won_Opptys__c, Site, BillingCity from Account where BillingCity like:'%'+searchboxstring+'%'];
-    }
+      result6 = new list<Matter__c>();
+      result6=[select ID,Name,Active__c,First_Data_Set_Date__c,DeactivationDate__c, Salesperson__c,Total_Active_GB__c,Per_GB_Price_per_Month__c, Contract_Billing_Account__c, Contract_EndUser_Account__c,Matter_EndClientAccount__c,Matter_EndClientAccount__r.name,Billing_Account2__c,Matter_End_User__c from Matter__c where Active__c = true AND (Contract_Billing_Account__c like:'%'+searchboxstring+'%' or Contract_EndUser_Account__c like:'%'+searchboxstring+'%' or Matter_EndClientAccount__r.name like:'%'+searchboxstring+'%')];   
+        decimal tempSum1 = 0;
+        for(Matter__c matt:result4){
+            tempSum1 += matt.Total_GB__c;
+        }
+        decimal tempSum2 = 0;
+        for(Matter__c matt2:result6){
+            tempSum2 += matt2.Total_Active_GB__c;
+        }
+        TotalGBSize = tempSum1;
+        NumOfTotalMatters = result4.size();
+        ActGBSize = tempSum2;
+        NumOfActMatters = result6.size();
+        }
     public static void fakeMethod(){
     Integer i = 0;
     i++;
   }
 
 }
+
