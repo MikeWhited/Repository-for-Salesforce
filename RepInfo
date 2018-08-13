@@ -14,7 +14,7 @@ public class RepInfo {
         Mats = new list<Matter__c>();
         Mats=[select ID,Name,Active__c,First_Data_Set_Date__c,DeactivationDate__c, Salesperson__c,SalespersonText__c,Salesperson2Text__c,Salesperson3Text__c,Total_Active_GB__c,Per_GB_Price_per_Month__c, Contract_Billing_Account__c, Contract_EndUser_Account__c,Matter_EndClientAccount__c,Matter_EndClientAccount__r.name,Billing_Account2__c,Matter_End_User__c from Matter__c where Active__c = true AND (SalespersonText__c like:'%'+searchboxstring+'%' or Salesperson2Text__c like:'%'+searchboxstring+'%' or Salesperson3Text__c like:'%'+searchboxstring+'%') LIMIT 1000];  
         Evnt = new list<Event>();
-        Evnt =[select ID,ActivityDate,Description,Type,WhoId, What.name,Who.Name,WhatId,CreatedById from Event where CreatedBy.Name like:'%'+searchboxstring+'%'LIMIT 1000];
+        Evnt =[select ID,ActivityDate,Description,Type,WhoId, What.name,Who.Name,WhatId,CreatedById from Event where CreatedBy.Name like:'%'+searchboxstring+'%' Order by ActivityDate DESC LIMIT 1000];
         decimal tempSum = 0;
         for(Matter__c matt:Mats){
             tempSum += matt.Total_Active_GB__c;
