@@ -39,29 +39,10 @@ public with sharing class demoClass {
         ActGBSize = tempSum2;
         NumOfActMatters = result6.size();
         }
-    public void searchbox1(){
-      result=new List<Contact>();
-      result=[select ID,Name,phone,ownerId,owner.name, account.name,account.ID,email,MailingCity,Title,Current_User__c, Inactive_User__c from Contact where owner.Name like:'%'+searchboxstring+'%'];
-      result1=new List<Opportunity>();
-      result1=[select ID,Name, account.name,owner.name,StageName,MRR_Amount__c,Primary_Contact__c from Opportunity where owner.Name like:'%'+searchboxstring+'%'];
-      result2=new List<Account>();
-      result2=[select ID,Name, Owner.name,Closed_Won_Opptys__c, Site, BillingCity from Account where owner.Name like:'%'+searchboxstring+'%'];
-      result4 = new list<Matter__c>();
-      result4=[select ID,Name,Active__c,First_Data_Set_Date__c,DeactivationDate__c, Salesperson__c,SalespersonText__c,Total_Active_GB__c,Per_GB_Price_per_Month__c, Contract_Billing_Account__c, Contract_EndUser_Account__c,Matter_EndClientAccount__c,Matter_EndClientAccount__r.name,Billing_Account2__c,Matter_End_User__c from Matter__c where SalespersonText__c like:'%'+searchboxstring+'%'];  
-    }
-    public void searchbox2(){
-      result=new List<Contact>();
-      result=[select ID,Name,phone,ownerId,owner.name, account.name,account.ID,email,MailingCity,Title,Current_User__c, Inactive_User__c from Contact where MailingCity like:'%'+searchboxstring+'%'];
-      result1=new List<Opportunity>();
-      result1=[select ID,Name, account.name,owner.name,StageName,MRR_Amount__c,Primary_Contact__c,account.BillingCity from Opportunity where account.BillingCity like:'%'+searchboxstring+'%'];
-      result2=new List<Account>();
-      result2=[select ID,Name, Owner.name,Closed_Won_Opptys__c, Site, BillingCity from Account where BillingCity like:'%'+searchboxstring+'%'];
-    }
     public static void fakeMethod(){
     Integer i = 0;
     i++;
   }
 
 }
-
 
