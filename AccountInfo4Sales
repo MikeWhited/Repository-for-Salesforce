@@ -2,18 +2,15 @@
 <apex:form >
 <apex:pageBlock title="Hello {!$User.FirstName}! Thanks for using this app to find the info you need,">
 	If there are any ideas you have for this page, or things that you belive will make the experience better, please slack "whited" or email them to whited@csdisco.com. Thanks!
- <apex:pageBlockSection title="Here you can search an account, A sales rep, or a city, just make sure you click the right search button" columns="1">
+ <apex:pageBlockSection collapsible="false" title="Here you can search an Account regardless of it's office location, just don't include the city in the search bar" columns="1">
  <apex:inputText value="{!searchBoxstring}" label="Search"/>
     </apex:pageBlockSection>
- <apex:pageBlockSection columns="3">
+ <apex:pageBlockSection columns="1">
    <apex:commandButton value="Search Account" action="{!searchbox}" >
   </apex:commandButton>
-   <apex:commandButton value="Search Owner" action="{!searchbox1}" >
-  </apex:commandButton>
-   <apex:commandButton value="Search City" action="{!searchbox2}" >
-  </apex:commandButton>
  </apex:pageBlockSection>
-     <apex:pageBlockSection collapsible="true" title="Matters" columns="1">
+    <apex:pageBlockSection title="Accounts that contain the name {!searchboxstring} currently are hosting {!ActGBSize} GBs across {!NumOfActMatters} Matters. In it's totality these firms have hosted a total of {!TotalGBSize} GBs across {!NumOfTotalMatters} Matters."/>
+     <apex:pageBlockSection id="pg1" collapsible="true" title="Matters" columns="1">
          This Matters list has be made so that it includes matters where the firm you search is listed on the "Originating Relationship" field on the matter, this field is used when there is an outside counsel, or if we're billing their client directly this field is where the firm should go. If you're interested in only the matters that we bill the client, or that they're the End Users for, ignore matters where they're not listed as the Billing or End User Account.
          <br/>
          <apex:pageblockTable value="{!result4}" var="matt">
@@ -28,12 +25,13 @@
              </apex:column>
              <apex:column headerValue="Is Active?" value="{!matt.Active__c}"/>
              <apex:column headerValue="Active GB" value="{!matt.Total_Active_GB__c}"/>
+             <apex:column headerValue="Total GB" value="{!matt.Total_GB__c}"/>
              <apex:column headerValue="Price per GB" value="{!matt.Per_GB_Price_per_Month__c}"/>
              <apex:column headerValue="Started" value="{!matt.First_Data_Set_Date__c}"/>
              <apex:column headerValue="Deactivated" value="{!matt.DeactivationDate__c}"/>
              <apex:column headerValue="Salesperson" value="{!matt.Salesperson__c}"/>
-    </apex:pageblockTable>   
- </apex:pageBlockSection>
+    </apex:pageblockTable>
+    </apex:pageBlockSection>
      <br/>
     <apex:commandButton value="Export To Excel" action="/apex/MatterFetch"/>
          <br/>
