@@ -1,10 +1,8 @@
-# Salesforce
-Spot for all Apex &amp; Visual Force
+# Salesforce 
+This will be a repository for all projects that I want documentation of so that it can be refrenced in building new things.
 
-When it comes to deploying inbound change sets into prod, you must do the following in order to get the code coverage to pass:
+Some (but very few) of these will be atrifacts from Gabe or Old DISCO developers.
 
--make primary contact on opps not required
+Many of these may be in other folders, but can be deleted out of other folders to keep lean. This will stay bulky and nothing will be deleted.
 
--deactivate the following processes: "fill in opps for ETA Children", "Oppy Type: New or Existing Business", and "Oppty Strategic Initiative"
 
-# Most all Code will be in testing until there is a "COMPLETE" comment at the top
