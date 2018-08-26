@@ -1,0 +1,45 @@
+public with sharing class QBRinfo {
+	public string searchboxstring{get; set;}
+     public list<matter__c> matterz {get; set;}
+     public list<ContractSpan__c> matterzStay {get; set;}
+     public list<ContractSpan__c> matterz2Firm {get; set;}
+     public list<ContractSpan__c> matterzLeaving {get; set;}
+     public list<Cold_Storage_Date_Range__c> matterzCold {get; set;}
+     public list<Contract> Subs {get; set;}
+     public decimal BaseMRR {get; set;}
+     public decimal XtraMRR {get; set;}
+     public decimal SpanMRR {get; set;}
+     public decimal NegateMRR {get; set;}
+     public decimal ColdStorageMRR {get; set;}
+     public decimal SubMRR {get; set;}
+     public decimal FinalMRR {get; set;}
+     public void GrabAll(){
+     Date Present = system.today();
+     matterz=[select ID,Name,MonthlyMin__c,Active__c,First_Data_Set_Date__c,DeactivationDate__c, Salesperson__c,Total_Active_GB__c,Contract_Type__c, Per_GB_Price_per_Month__c, Contract_Billing_Account__c, Contract_EndUser_Account__c,Matter_EndClientAccount__c,Matter_EndClientAccount__r.name,Billing_Account2__c,Matter_End_User__c from Matter__c where Billing_Account2__c = :searchboxstring AND (Num_Of_Spans__c = 0 AND ColdStorage__c =0 AND Active__c = TRUE AND Contract_Type__c = 'Transactional')];   
+     matterzStay=[select ID,Contract__r.MinimumMatterCharge__c,Name,Contract__c,Contract__r.Price_Per_GB__c,matter__c,matter__r.name,matter__r.Total_Active_GB__c,matter__r.Billing_Account2__c,Contract__r.BillingAccount__c,ActiveMatter__c from ContractSpan__c where Contract__r.BillingAccount__c = :searchboxstring AND (matter__r.Billing_Account2__c = :searchboxstring)];
+     matterz2Firm=[select ID,Contract__r.MinimumMatterCharge__c,Name,Contract__c,Contract__r.Price_Per_GB__c,matter__c,matter__r.name,matter__r.Billing_Account2__c,matter__r.Total_Active_GB__c,Contract__r.BillingAccount__c,ActiveMatter__c from ContractSpan__c where Contract__r.BillingAccount__c = :searchboxstring AND (matter__r.Billing_Account2__c != :searchboxstring)];
+     matterzCold=[select ID,Matter__r.MonthlyMin__c,Name,Matter__c,Begin_Date__c,End_Date__c,matter__r.name,matter__r.Billing_Account2__c,matter__r.ColdStoragePrice__c,matter__r.Total_Active_GB__c from Cold_Storage_Date_Range__c where matter__r.Billing_Account2__c = :searchboxstring AND (End_Date__c = NULL)];
+     Subs=[select ID,Name, EndDate,StartDate,SubscriptionPricePerMonth__c,SubscriptionDataLimit__c from Contract where Type__c ='Subscription' AND (EndDate > :Present)];    
+        decimal BaseMRR = 0;
+        for(Matter__c matt:matterz){
+            BaseMRR += math.max(matt.MonthlyMin__c,(matt.Total_Active_GB__c * matt.Per_GB_Price_per_Month__c));
+        }
+        decimal XtraMRR = 0;
+        for(ContractSpan__c matt2:matterzStay){
+            XtraMRR += math.max(matt2.Contract__r.MinimumMatterCharge__c,(matt2.matter__r.Total_Active_GB__c * matt2.Contract__r.Price_Per_GB__c));
+     }
+        decimal SpanMRR = 0;
+        for(ContractSpan__c matt3:matterz2Firm){
+            SpanMRR += math.max(matt3.Contract__r.MinimumMatterCharge__c,(matt3.matter__r.Total_Active_GB__c * matt3.Contract__r.Price_Per_GB__c));
+     }
+        decimal ColdStorageMRR = 0;
+        for(Cold_Storage_Date_Range__c matt4:matterzCold){
+            ColdStorageMRR += math.max(matt4.Matter__r.MonthlyMin__c,(matt4.matter__r.Total_Active_GB__c * matt4.matter__r.ColdStoragePrice__c));
+     }
+        decimal SubMRR = 0;
+         for(Contract con:Subs){
+             SubMRR += con.SubscriptionPricePerMonth__c;
+     }
+     FinalMRR = (BaseMRR + XtraMRR + SpanMRR + ColdStorageMRR + SubMRR);
+}
+}
