@@ -1,0 +1,34 @@
+public with sharing class FinanceClass {
+public string searchboxstring{get; set;}
+     public list<ContractSpan__c> result {get; set;}
+     public list<ContractSpan__c> result1 {get; set;}
+     public list<ContractSpan__c> result2 {get; set;}
+     public list<contract> result3 {get; set;}
+     public list<Cold_Storage_Date_Range__c> result4 {get; set;}
+     public list<matter__c> result5 {get; set;}
+     public list<dataset__c> result6 {get; set;}
+     public list<matter__c> result7 {get; set;}
+     public void GrabWeirdBilling(){
+      result=[select ID,Name,Contract__c,matter__c,matter__r.name,matter__r.Per_GB_Price_per_Month__c,matter__r.Billing_Account2__c,Contract__r.BillingAccount__c,ActiveMatter__c,Contract__r.Price_Per_GB__c,End_Date__c, Start_Date__c from ContractSpan__c where Contract__r.BillingAccount__c = :searchboxstring AND (matter__r.Billing_Account2__c = :searchboxstring)];
+      result1=[select ID,Name,Contract__c,matter__c,matter__r.name,matter__r.Billing_Account2__c,matter__r.Per_GB_Price_per_Month__c,Contract__r.BillingAccount__c,ActiveMatter__c,Contract__r.Price_Per_GB__c,End_Date__c, Start_Date__c from ContractSpan__c where Contract__r.BillingAccount__c = :searchboxstring AND (matter__r.Billing_Account2__c != :searchboxstring)];
+      result2=[select ID,Name,Contract__c,matter__c,matter__r.name,matter__r.Billing_Account2__c,matter__r.Per_GB_Price_per_Month__c,Contract__r.BillingAccount__c,ActiveMatter__c,Contract__r.Price_Per_GB__c,End_Date__c, Start_Date__c from ContractSpan__c where Contract__r.BillingAccount__c != :searchboxstring AND (matter__r.Billing_Account2__c = :searchboxstring)];
+      result3=[select ID,Name, account.name,Price_Per_GB__c,SpecialTerms,SubscriptionPricePerMonth__c,ContractNumber, EndDate, StartDate, Owner.name,Type__c, MinimumMatterCharge__c,BillingAccount__c,Custom_Billing__c from Contract where BillingAccount__c = :searchboxstring AND (Custom_Billing__c = TRUE)];
+      result4=[select ID, Name,Matter__c,Begin_Date__c,End_Date__c,matter__r.name,matter__r.Billing_Account2__c from Cold_Storage_Date_Range__c where matter__r.Billing_Account2__c = :searchboxstring];   
+      result5=[select ID,Name,Active__c,Vault_Data_Size__c,First_Data_Set_Date__c,DeactivationDate__c, Salesperson__c,Total_Active_GB__c,Per_GB_Price_per_Month__c, Contract_Billing_Account__c, Contract_EndUser_Account__c,Matter_EndClientAccount__c,Matter_EndClientAccount__r.name,Billing_Account2__c,Matter_End_User__c,Contract__r.Price_per_GB_Cold_Storage__c from Matter__c where Billing_Account2__c = :searchboxstring AND Active__c = true AND (Vault_Data_Size__c != 0 AND Vault_Data_Size__c != NULL)]; 
+      result6=[select ID,Name,Matter__c,Matter__r.Name,LastModifiedDate,LastModifiedBy.Name,Matter__r.Billing_Account2__c From Dataset__c Where Matter__r.Billing_Account2__c = :searchboxstring Order by LastModifiedDate DESC LIMIT 15];
+      result7=[select ID,Name,Active__c,First_Data_Set_Date__c,DeactivationDate__c,LastModifiedDate, LastModifiedBy.Name, Salesperson__c,Total_Active_GB__c,Per_GB_Price_per_Month__c, Contract_Billing_Account__c, Contract_EndUser_Account__c,Matter_EndClientAccount__c,Matter_EndClientAccount__r.name,Billing_Account2__c,Matter_End_User__c,Contract__r.Price_per_GB_Cold_Storage__c from Matter__c where Billing_Account2__c = :searchboxstring AND Active__c = true AND (Vault_Data_Size__c != 0 AND Vault_Data_Size__c != NULL) Order by LastModifiedDate DESC LIMIT 15]; 
+        /*decimal tempSum1 = 0;
+        for(Matter__c matt:result4){
+            tempSum1 += matt.Total_GB__c;
+        }
+        decimal tempSum2 = 0;
+        for(Matter__c matt2:result6){
+            tempSum2 += matt2.Total_Active_GB__c;
+        }
+        TotalGBSize = tempSum1;
+        NumOfTotalMatters = result4.size();
+        ActGBSize = tempSum2;
+        NumOfActMatters = result6.size();*/
+        }
+    
+}
